@@ -12,7 +12,7 @@ const ProductResult = ({ product }) => {
         <CardMedia
           component="img"
           height="140"
-          image={product.images[0]}
+          image={product.image} // Use 'image' property
           alt={product.title}
         />
         <CardContent>
@@ -25,6 +25,18 @@ const ProductResult = ({ product }) => {
           <Typography variant="h6">
             Price: ${product.price}
           </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Brand: {product.brand}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Model: {product.model}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Color: {product.color}
+          </Typography>
+          {product.popular && <Typography variant="body2" color="text.secondary">Popular</Typography>}
+          {product.onSale && <Typography variant="body2" color="text.secondary">On Sale</Typography>}
+          {product.discount > 0 && <Typography variant="body2" color="text.secondary">Discount: {product.discount}%</Typography>}
         </CardContent>
       </Card>
     </Grid>

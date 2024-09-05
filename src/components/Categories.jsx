@@ -3,7 +3,6 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 
 const Categories = () => {
@@ -14,8 +13,8 @@ const Categories = () => {
   useEffect(() => {
     axios.get('http://localhost:3000/categories')
       .then(response => {
-        console.log(response.data)
-        setCategories(response.data);
+        console.log(response.data.categories); // Adjust according to actual data structure
+        setCategories(response.data.categories); // Access the 'categories' array
         setLoading(false);
       })
       .catch(error => {
@@ -32,18 +31,12 @@ const Categories = () => {
     <div>
       <h1>Categories</h1>
       <Grid container spacing={2}>
-        {categories.map(category => (
-          <Grid item xs={12} sm={6} md={4} key={category.id}>
+        {categories.map((category, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
             <Card>
-              <CardMedia
-                component="img"
-                height="140"
-                image={category.image}
-                alt={category.name}
-              />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                  {category.name}
+                  {category}
                 </Typography>
               </CardContent>
             </Card>

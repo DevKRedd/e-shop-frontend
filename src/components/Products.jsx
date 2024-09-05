@@ -13,8 +13,8 @@ const Products = () => {
   useEffect(() => {
     axios.get('http://localhost:3000/products')
       .then(response => {
-        console.log(response.data)
-        setProducts(response.data);
+        console.log(response.data.products); // Adjust according to actual data structure
+        setProducts(response.data.products); // Access the 'products' array
         setLoading(false);
       })
       .catch(error => {
