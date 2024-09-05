@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -9,6 +14,7 @@ const Categories = () => {
   useEffect(() => {
     axios.get('http://localhost:3000/categories')
       .then(response => {
+        console.log(response.data)
         setCategories(response.data);
         setLoading(false);
       })
@@ -25,14 +31,25 @@ const Categories = () => {
   return (
     <div>
       <h1>Categories</h1>
-      <ul>
+      <Grid container spacing={2}>
         {categories.map(category => (
-          <li key={category.id}>
-            <h2>{category.name}</h2>
-            <img src={category.image} alt={category.name} style={{ width: '100px' }} />
-          </li>
+          <Grid item xs={12} sm={6} md={4} key={category.id}>
+            <Card>
+              <CardMedia
+                component="img"
+                height="140"
+                image={category.image}
+                alt={category.name}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {category.name}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </ul>
+      </Grid>
     </div>
   );
 };

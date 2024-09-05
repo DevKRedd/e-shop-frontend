@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import ProductResult from './ProductResult';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:3000/products')
       .then(response => {
+        console.log(response.data)
         setProducts(response.data);
         setLoading(false);
       })
@@ -19,22 +24,29 @@ const Products = () => {
       });
   }, []);
 
+  const filteredProducts = products.filter(product =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div>
       <h1>Products</h1>
-      <ul>
-        {products.map(product => (
-          <li key={product.id}>
-            <h2>{product.title}</h2>
-            <p>{product.description}</p>
-            <p>Price: ${product.price}</p>
-            <img src={product.images[0]} alt={product.title} style={{ width: '100px' }} />
-          </li>
+      <TextField
+        label="Search Products"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
+      <Grid container spacing={2}>
+        {filteredProducts.map(product => (
+          <ProductResult key={product.id} product={product} />
         ))}
-      </ul>
+      </Grid>
     </div>
   );
 };
