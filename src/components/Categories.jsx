@@ -3,6 +3,7 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 
 const Categories = () => {
@@ -10,11 +11,25 @@ const Categories = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const categoryImages = {
+    tv: '/images/categories/tv.jpg',
+    audio: '/images/categories/audio.jpg',
+    laptop: '/images/categories/laptop.jpg',
+    mobile: '/images/categories/mobile.jpg',
+    gaming: '/images/categories/gaming.jpg',
+    appliances: '/images/categories/appliances.jpg',
+  };
+
   useEffect(() => {
     axios.get('http://localhost:3000/categories')
       .then(response => {
-        console.log(response.data.categories); // Adjust according to actual data structure
-        setCategories(response.data.categories); // Access the 'categories' array
+        console.log(response.data);
+        // Ensure the response has the 'categories' array
+        if (response.data && Array.isArray(response.data.categories)) {
+          setCategories(response.data.categories);
+        } else {
+          setError('Invalid categories data');
+        }
         setLoading(false);
       })
       .catch(error => {
@@ -31,17 +46,27 @@ const Categories = () => {
     <div>
       <h1>Categories</h1>
       <Grid container spacing={2}>
-        {categories.map((category, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {category}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+        {Array.isArray(categories) && categories.length > 0 ? (
+          categories.map(category => (
+            <Grid item xs={12} sm={6} md={4} key={category}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={categoryImages[category]}  // Dynamically load the image based on category
+                  alt={category}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))
+        ) : (
+          <p>No categories available</p>
+        )}
       </Grid>
     </div>
   );
